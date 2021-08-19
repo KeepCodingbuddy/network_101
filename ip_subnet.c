@@ -65,12 +65,33 @@ get_broadcast_address(char *ip_addr, char mask, char *output_buffer) {
 
 }
 
+unsigned int
+get_ip_integer_equivalent(char *ip_address) {
+
+    unsigned int ip_addr_integer = 0;
+
+    // Convert ip address from A.B.C.D format to equivalent unsigned integer
+    inet_pton(AF_INET, ip_address, &ip_addr_integer);
+
+    return htonl(ip_addr_integer);
+}
+
+void
+get_abcd_ip_format(unsigned int ip_address, char *output_buffer) {
+
+    // Convert an ip address from Integer to A.B.C.D format
+    inet_ntop(AF_INET, &ip_address, output_buffer, PREFIX_LEN + 1);
+
+    output_buffer[PREFIX_LEN] = '\0';
+}
+
 int main(int argc, char **argv) {
 
     // Test
     // printf("%x", get_mask_value_in_integer_format(32));
 
     // Testing get_broadcast_address()
+/*
     printf("Testing Question 1 ...\n");
 
     char ip_address[PREFIX_LEN + 1], output_buffer[PREFIX_LEN + 1];         // Allocate space for input and output
@@ -86,8 +107,25 @@ int main(int argc, char **argv) {
     get_broadcast_address(ip_address, mask, output_buffer);                 // Function to deduce the Broadcast Address
 
     printf("Broadcast address = %s\n", output_buffer);                      // Display Broadcast Address
-
     printf("Testing Question 1 done.\n");                                   // Done
+*/
+
+    // Testing get_ip_integer_equivalent()
+    printf("Testing Question 2 ... \n");
+
+    char ip_address[PREFIX_LEN + 1];                                        // Space to hold ip address
+
+    memset(ip_address, 0, PREFIX_LEN + 1);                                  // Set it ready to receive appropriate bytes
+    memcpy(ip_address, "192.168.2.10", strlen("192.168.2.10"));             // Copy in intended ip address bytes
+
+    ip_address[strlen(ip_address)] = '\0';                                  // Set last index to null
+
+    unsigned int address = get_ip_integer_equivalent(ip_address);
+
+    printf("The address in integer format is = %u\n", address);
+    printf("Testing Question 2 Done.\n");
+
+
 
 
     return 0;       // Exit program
