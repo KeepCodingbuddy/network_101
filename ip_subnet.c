@@ -38,13 +38,57 @@ get_mask_value_in_integer_format(char mask_value) {
 void 
 get_broadcast_address(char *ip_addr, char mask, char *output_buffer) {
 
-                        
+    unsigned int ip_addr_integer = 0;
+
+    // convert ip address from A.B.C.D format to equivalent unsigned integer (binary) and store it in ip_addr_integer
+    inet_pton(AF_INET, ip_addr, &ip_addr_integer);
+
+    /* 
+        htonl() takes a 32-bit long integer number in host byte order and returns a 
+        32-bit number in the network byte order used in TCP/IP
+    */
+    ip_addr_integer = htonl(ip_addr_integer); 
+
+    unsigned int mask_integer_format = get_mask_value_in_integer_format(mask);
+    COMPLEMENT(mask_integer_format); // Invert bits eg. From 11111111 11111111 11111111 0000000 -> 00000000 00000000 00000000 11111111
+
+    unsigned int broadcast_addr = ip_addr_integer | mask_integer_format;
+    broadcast_addr = htonl(broadcast_addr);  // Convert IP_v4 in host byte order to IP_v4 in network byte order
+
+    /* 
+        Convert IP_v4 address in network byte format to IP_v4 in presentation format, 
+        by setting the output buffer into a specified length capable of containing it.
+    */
+    inet_ntop(AF_INET, &broadcast_addr, output_buffer, PREFIX_LEN + 1);
+
+    output_buffer[PREFIX_LEN] = '\0';
+
 }
 
 int main(int argc, char **argv) {
 
     // Test
     // printf("%x", get_mask_value_in_integer_format(32));
+
+    // Testing get_broadcast_address()
+    printf("Testing Question 1 ...\n");
+
+    char ip_address[PREFIX_LEN + 1], output_buffer[PREFIX_LEN + 1];         // Allocate space for input and output
+
+    memset(ip_address, 0, PREFIX_LEN + 1);                                  // Set ip_address to appropriate bytes
+    memcpy(ip_address, "192.168.2.10", strlen("192.168.2.10"));             // Copy intended ip address
+
+    ip_address[strlen(ip_address)] = '\0';                                  // Set last index to null
+
+    char mask = 24;                                                         // Set mask value
+
+    memset(output_buffer, 0, PREFIX_LEN + 1);                               // Get output ready to receive bytes format
+    get_broadcast_address(ip_address, mask, output_buffer);                 // Function to deduce the Broadcast Address
+
+    printf("Broadcast address = %s\n", output_buffer);                      // Display Broadcast Address
+
+    printf("Testing Question 1 done.\n");                                   // Done
+
 
     return 0;       // Exit program
 }
