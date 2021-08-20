@@ -107,6 +107,13 @@ get_network_id(char *ip_address, char mask, char *output_buffer) {
     inet_ntop(AF_INET, &network_id, output_buffer, PREFIX_LEN + 1);
 }
 
+unsigned int
+get_subnet_cardinality(char mask_value) {
+
+    // possible ip address combination
+    return pow(2,MAX_MASK_LEN - mask_value) -2;
+}
+
 int main(int argc, char **argv) {
 
 /*
@@ -165,23 +172,32 @@ int main(int argc, char **argv) {
     printf("Testinf Question 3 Done.\n");                                   // Done.
 */
 
+/*
     // Testing get_network_id()
     printf("Testing Question 4 ...\n");
 
-    char ip_address[PREFIX_LEN + 1], output_buffer[PREFIX_LEN + 1];
+    char ip_address[PREFIX_LEN + 1], output_buffer[PREFIX_LEN + 1];         // Allocate space to get ip address
 
-    memset(ip_address, 0, PREFIX_LEN + 1);
-    memcpy(ip_address, "192.168.2.10", strlen("192.168.2.10"));
+    memset(ip_address, 0, PREFIX_LEN + 1);                                  // Get ip_address ready for bytes format
+    memcpy(ip_address, "192.168.2.10", strlen("192.168.2.10"));             // Fill in intended ip address
 
-    ip_address[strlen(ip_address)] = '\0';
+    ip_address[strlen(ip_address)] = '\0';                                  // Set last length to null
     char mask = 20;
 
-    memset(output_buffer, 0, PREFIX_LEN + 1);
-    get_network_id(ip_address, mask, output_buffer);
+    memset(output_buffer, 0, PREFIX_LEN + 1);                               // Set the output_buffer to appropriate length
+    get_network_id(ip_address, mask, output_buffer);                        // Get network id
 
-    printf("Network Id = %s / %u\n", output_buffer, mask);
-    printf("Testing Question 4 done.\n");
+    printf("Network Id = %s / %u\n", output_buffer, mask);                  // Display network id
+    printf("Testing Question 4 Done.\n");
+*/
 
+    // Testing get_subnet_cardinality()
+    printf("Testing Question 5 ...\n");                                     
+
+    char mask = 24;
+    printf("Cardinality = %u\n", get_subnet_cardinality(mask));              // Calculate possible combination of ip addresses 
+
+    printf("Testing Question 5 Done.\n");
 
 
     return 0;       // Exit program
