@@ -107,7 +107,7 @@ int main(int argc, char **argv) {
     get_broadcast_address(ip_address, mask, output_buffer);                 // Function to deduce the Broadcast Address
 
     printf("Broadcast address = %s\n", output_buffer);                      // Display Broadcast Address
-    printf("Testing Question 1 done.\n");                                   // Done
+    printf("Testing Question 1 done.\n");                                   // Done.
 */
 
     // Testing get_ip_integer_equivalent()
@@ -120,10 +120,10 @@ int main(int argc, char **argv) {
 
     ip_address[strlen(ip_address)] = '\0';                                  // Set last index to null
 
-    unsigned int address = get_ip_integer_equivalent(ip_address);
+    unsigned int address = get_ip_integer_equivalent(ip_address);           // Function to deduce the integer equivalent of Broadcast Address
 
-    printf("The address in integer format is = %u\n", address);
-    printf("Testing Question 2 Done.\n");
+    printf("The address in integer format is = %u\n", address);             // Display it
+    printf("Testing Question 2 Done.\n");                                   // Done.
 
 
 
