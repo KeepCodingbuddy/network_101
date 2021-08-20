@@ -85,13 +85,36 @@ get_abcd_ip_format(unsigned int ip_address, char *output_buffer) {
     output_buffer[PREFIX_LEN] = '\0';
 }
 
+void 
+get_network_id(char *ip_address, char mask, char *output_buffer) {
+
+    // Get mask in integer format
+    unsigned int mask_integer_format = get_mask_value_in_integer_format(mask);
+
+    // To hold ip address in integer form
+    unsigned int ip_address_integer = 0;
+
+    // Convert from presentation format to integer format
+    inet_pton(AF_INET, ip_address, &ip_address_integer);
+
+    // Use & bitwise operator between IP address and mask to get network id
+    unsigned int network_id = ip_address_integer & mask_integer_format;
+
+    // Convert from host byte order to network byte order
+    network_id = htonl(network_id);
+
+    // Convert from network format to presentation format
+    inet_ntop(AF_INET, &network_id, output_buffer, PREFIX_LEN + 1);
+}
+
 int main(int argc, char **argv) {
 
+/*
     // Test
     // printf("%x", get_mask_value_in_integer_format(32));
 
     // Testing get_broadcast_address()
-/*
+
     printf("Testing Question 1 ...\n");
 
     char ip_address[PREFIX_LEN + 1], output_buffer[PREFIX_LEN + 1];         // Allocate space for input and output
@@ -110,6 +133,7 @@ int main(int argc, char **argv) {
     printf("Testing Question 1 done.\n");                                   // Done.
 */
 
+/*
     // Testing get_ip_integer_equivalent()
     printf("Testing Question 2 ... \n");
 
@@ -125,6 +149,38 @@ int main(int argc, char **argv) {
     printf("The address in integer format is = %u\n", address);             // Display it
     printf("Testing Question 2 Done.\n");                                   // Done.
 
+*/
+
+/*
+    // Testing get_abcd_ip_format()
+    printf("Testing Question 3 ...\n");
+
+    char output_buffer[PREFIX_LEN + 1];                                     // Make buffer to hold address
+    memset(output_buffer,0 , PREFIX_LEN + 1);                               // Set it ready for bytes formating
+
+    unsigned int address = 2058138165;                                      // Address to be converted to presentation format
+    get_abcd_ip_format(htonl(address), output_buffer);                      // Deduce A.B.C.D presentation format
+
+    printf("Ip address in A.B.C.D format = %s\n", output_buffer);           // Display presentation format of IP address
+    printf("Testinf Question 3 Done.\n");                                   // Done.
+*/
+
+    // Testing get_network_id()
+    printf("Testing Question 4 ...\n");
+
+    char ip_address[PREFIX_LEN + 1], output_buffer[PREFIX_LEN + 1];
+
+    memset(ip_address, 0, PREFIX_LEN + 1);
+    memcpy(ip_address, "192.168.2.10", strlen("192.168.2.10"));
+
+    ip_address[strlen(ip_address)] = '\0';
+    char mask = 20;
+
+    memset(output_buffer, 0, PREFIX_LEN + 1);
+    get_network_id(ip_address, mask, output_buffer);
+
+    printf("Network Id = %s / %u\n", output_buffer, mask);
+    printf("Testing Question 4 done.\n");
 
 
 
