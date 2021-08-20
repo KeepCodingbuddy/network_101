@@ -21,7 +21,7 @@
     11111111 11111111 11111111 00000000 
 */
 
-static unsigned int 
+static unsigned int
 get_mask_value_in_integer_format(char mask_value) {
 
     unsigned int mask = 0xFFFFFFFF;
@@ -106,12 +106,36 @@ get_network_id(char *ip_address, char mask, char *output_buffer) {
     // Convert from network format to presentation format
     inet_ntop(AF_INET, &network_id, output_buffer, PREFIX_LEN + 1);
 }
-
+/*
 unsigned int
 get_subnet_cardinality(char mask_value) {
 
     // possible ip address combination
     return pow(2,MAX_MASK_LEN - mask_value) -2;
+}
+*/
+
+int  // Return 0 if true, -1 if false
+check_ip_subnet_membership(char *network_id, char mask, char *check_ip) {
+    
+    unsigned int check_ip_integer = 0;
+    inet_pton(AF_INET, check_ip, &check_ip_integer);
+
+    unsigned int mask_integer = get_mask_value_in_integer_format(mask);
+    unsigned int calculated_nw_id = check_ip_integer & mask_integer;
+
+    unsigned int network_id_integer = 0;
+    inet_pton(AF_INET, network_id, &network_id_integer);
+
+    if (network_id_integer == check_ip_integer) {
+
+        return 0;
+
+    } else {
+
+        return -1;
+        
+    }
 }
 
 int main(int argc, char **argv) {
@@ -191,6 +215,7 @@ int main(int argc, char **argv) {
     printf("Testing Question 4 Done.\n");
 */
 
+/*
     // Testing get_subnet_cardinality()
     printf("Testing Question 5 ...\n");                                     
 
@@ -198,7 +223,26 @@ int main(int argc, char **argv) {
     printf("Cardinality = %u\n", get_subnet_cardinality(mask));              // Calculate possible combination of ip addresses 
 
     printf("Testing Question 5 Done.\n");
+*/
 
+    // Testing check_ip_subnet_membership()
+
+    printf("Testing Question 6 ...\n");
+
+    char network_id[PREFIX_LEN + 1];                                        // Allocate space for network id
+    strncpy(network_id, "192.168.1.0", strlen("192.168.1.0"));              // Copy network id
+    network_id[PREFIX_LEN] = '\0';                                          // Set last length index to null
+
+    char mask = 24;                                                         // Mask value
+
+    char ip_address[PREFIX_LEN + 1];                                        // Ip address to check if it belongs to subnet
+    strncpy(ip_address, "192.168.1.10", strlen("192.168.1.10"));            // Copy the address
+    ip_address[PREFIX_LEN] = '\0';                                          // Set last length index to null
+
+    int res = check_ip_subnet_membership(network_id, mask, ip_address);     // Check if IP belongs to subnet
+
+    printf("IP Subnet check Result = %s\n", (res == 0) ? "Membership True" : "Membership False");         // Print result
+    printf("Testing Question 6 Done.\n");                                   // Done.
 
     return 0;       // Exit program
 }
